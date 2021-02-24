@@ -8,7 +8,7 @@
                 <hr>
                 {{-- Form --}}
                 <form action="{{ route('login_submit') }}" method="post">
-
+                    {{-- csrf --}}
                     @csrf
                     <div class="form-group">
                         <label for="">Usuário</label>
@@ -20,10 +20,27 @@
                     </div>
                     <div class="form-group">
                         <input type="submit" value="Entrar" class="btn btn-primary">
+                        <input type="reset" value="Limpar" class="btn btn-danger">
                     </div>
                 </form>
                 {{-- /form --}}
+                {{-- Mostrando o erro dos inputs --}}
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $mensagem)
+                                <li>{{ $mensagem }}</li>
+                            @endforeach
+                        </ul>
+
+                    </div>
+                @endif
             </div>
+            {{-- Erros de login --}}
+            @if (isset($erro))
+                <div class="alert alert-danger text-center">{{ $erro }}</div>
+
+            @endif
         </div>
     </div>
 @endsection
