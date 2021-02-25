@@ -18,3 +18,5 @@ Route::get('/', [SistemaController::class, 'index'])->name('index');
 Route::get('/login', [SistemaController::class, 'login'])->name('login');
 Route::post('/login_submit', [SistemaController::class, 'login_submit'])->name('login_submit');
 Route::get('/temp', [SistemaController::class, 'temp'])->name('temp');
+Route::get('/home', [SistemaController::class, 'home'])->name('home');
+Route::get('/logout', [SistemaController::class, 'logout'])->name('logout');

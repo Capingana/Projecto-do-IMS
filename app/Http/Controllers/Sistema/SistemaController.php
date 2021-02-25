@@ -14,16 +14,28 @@ class SistemaController extends Controller
     public function index()
     {
         //Verifica se o usuário está ou não logado
-        if (Session()->has('usuario')) {
-            echo "Logado";
+        if ($this->checkSession()) {
+            return redirect()->route('home');
         } else {
 
             return redirect()->route('login');
         }
     }
     //    =====================================================
+
+    private function checkSession()
+    {
+        return session()->has('usuario');
+    }
+    //    =====================================================
     public function login()
     {
+        // Verificar se já existe sessão
+        if ($this->checkSession()) {
+            return redirect()->route('index');
+        }
+
+
         $erro = session('erro');
         $data = [];
         if (!empty($erro)) {
@@ -32,13 +44,26 @@ class SistemaController extends Controller
             ];
         }
 
-        return view('Sistema.Admin.usuario.login');
+        return view('Sistema.Admin.usuario.login', $data);
     }
 
     //    =====================================================
 
     public function login_submit(LoginRequest $request)
     {
+
+        // verifica se houve submissão de formulário
+        if (!$request->isMethod('post')) {
+            return redirect()->route('index');
+        }
+
+
+        // Verificar se já existe sessão
+        if ($this->checkSession()) {
+            return redirect()->route('index');
+        }
+
+
         // Validação de dados
         $request->validated();
 
@@ -54,13 +79,32 @@ class SistemaController extends Controller
             return redirect()->route('login');
         }
         // Verificando a senha correcta
-        if (Hash::check($senha, $usuario->senha)) {
-            echo "OK";
-        } else {
-            echo "NOT OK";
+        if (!Hash::check($senha, $usuario->senha)) {
+            session()->flash('erro', 'Senha inválida.');
+            return redirect()->route('login');
         }
+        session()->put('usuario', $usuario);
+        return redirect()->route('index');
+    }
+    //    =====================================================
+    // Sair da página
+    public function logout()
+    {
+        session()->forget('usuario');
+        return redirect()->route('index');
+    }
+    //    =====================================================
+    // Entrar na aplicação principal
+    public function home()
+    {
+        if (!$this->checkSession()) {
+            return redirect()->route('login');
+        }
+
+        return view('sistema.home');
     }
 
+    //    =====================================================
 
 
     //    =====================================================
