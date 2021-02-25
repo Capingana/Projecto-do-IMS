@@ -35,12 +35,13 @@
 
                     </div>
                 @endif
-            </div>
-            {{-- Erros de login --}}
-            @if (isset($erro))
-                <div class="alert alert-danger text-center">{{ $erro }}</div>
+                {{-- Erros de login --}}
+                @if (isset($erro))
+                    <div class="alert alert-danger text-center">{{ $erro }}</div>
 
-            @endif
+                @endif
+            </div>
+
         </div>
     </div>
 @endsection
